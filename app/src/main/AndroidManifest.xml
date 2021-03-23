@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.funsdkexample">
     <!-- Network access permission -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- The permission of saving Photoes or videoes in SD card -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- The permission of QR scan -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- Configuration for Network and get the information of WiFi -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Voice intercom -->
@@ -20,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FunSDKExample">
-        <activity android:name=".ui.DeviceUserListActivity"></activity>
+        <activity android:name=".ui.UserAddDeviceActivity"></activity>
+        <activity android:name=".ui.GuideDeviceActivity" />
+        <activity android:name=".ui.DeviceUserListActivity" />
         <activity android:name=".ui.AuthenticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

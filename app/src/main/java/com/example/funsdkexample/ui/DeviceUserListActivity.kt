@@ -1,9 +1,11 @@
 package com.example.funsdkexample.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.funsdkexample.adapter.DeviceListAdapter
 import com.example.funsdkexample.databinding.ActivityDeviceUserListBinding
 import com.lib.MsgContent
@@ -21,22 +23,23 @@ class DeviceUserListActivity : AppCompatActivity(), OnFunDeviceOptListener, OnFu
 
     private lateinit var binding: ActivityDeviceUserListBinding
     private lateinit var deviceListAdapter: DeviceListAdapter
-    private val MESSAGE_REFRESH_DEVICE_STATUS = 0x100
-    private val INTERVAL_REFRESH_DEV_STATUS = 30 * 1000
+    companion object{
+        const val MESSAGE_REFRESH_DEVICE_STATUS = 0x100
+        const val INTERVAL_REFRESH_DEV_STATUS = 30 * 1000
+    }
+
 
     private val mHandler: Handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 MESSAGE_REFRESH_DEVICE_STATUS -> {
-                    FunSupport.getInstance().requestAllDeviceStatus()
-
                     // refresh after interval delay
                     removeMessages(MESSAGE_REFRESH_DEVICE_STATUS)
                     sendEmptyMessageDelayed(
                         MESSAGE_REFRESH_DEVICE_STATUS,
                         INTERVAL_REFRESH_DEV_STATUS.toLong()
                     )
-                    deviceListAdapter.setDeviceItemList(FunSupport.getInstance().deviceList)
+                    onRefresh()
                 }
             }
         }
@@ -55,6 +58,21 @@ class DeviceUserListActivity : AppCompatActivity(), OnFunDeviceOptListener, OnFu
         FunSupport.getInstance().registerOnAddSubDeviceResultListener(this)
 
         initDeviceList()
+
+        binding.srfDeviceList.setOnRefreshListener {
+            onRefresh()
+            binding.srfDeviceList.isRefreshing = false
+        }
+    }
+
+    override fun onDestroy() {
+        FunSupport.getInstance().removeOnFunDeviceOptListener(this)
+        super.onDestroy()
+    }
+
+    private fun onRefresh(){
+        deviceListAdapter.setDeviceItemList(FunSupport.getInstance().deviceList)
+        FunSupport.getInstance().requestAllDeviceStatus()
     }
 
     private fun initDeviceList() {
@@ -68,6 +86,10 @@ class DeviceUserListActivity : AppCompatActivity(), OnFunDeviceOptListener, OnFu
 
     private fun onDeviceItemClick(funDevice: FunDevice){
         toast(funDevice.devName.toString())
+        val intent = Intent(this, GuideDeviceActivity::class.java)
+        intent.putExtra("FUN_DEVICE_ID", funDevice.id)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     override fun onDeviceGetConfigFailed(funDevice: FunDevice?, errCode: Int?) {
