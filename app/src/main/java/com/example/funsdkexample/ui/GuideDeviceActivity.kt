@@ -1,5 +1,7 @@
 package com.example.funsdkexample.ui
 
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
@@ -93,11 +95,25 @@ class GuideDeviceActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
     }
 
     private fun bindEvents(){
-        binding.btCapture.setOnClickListener {
+        binding.btCapture?.setOnClickListener {
             tryToCapture()
         }
-        binding.btRecord.setOnClickListener {
+        binding.btRecord?.setOnClickListener {
             tryToRecord()
+        }
+        binding.btSwitchOrientation?.setOnClickListener {
+            switchOrientation()
+        }
+        binding.btVideoRecord?.setOnClickListener {
+            startRecordList()
+        }
+    }
+
+    private fun switchOrientation(){
+        if(requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE){
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        } else if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 
@@ -109,19 +125,15 @@ class GuideDeviceActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
 
         if(funVideoView.bRecord){
             funVideoView.stopRecordVideo()
-            binding.imgRecording.visibility = View.INVISIBLE
-            binding.btRecord.text = "Record"
+            binding.imgRecording?.visibility = View.INVISIBLE
+            binding.btRecord?.text = "Record"
             toast("stop record/ save video to" + funVideoView.filePath)
         }else{
             funVideoView.startRecordVideo(null)
-            binding.imgRecording.visibility = View.VISIBLE
-            binding.btRecord.text = "Stop Record"
+            binding.imgRecording?.visibility = View.VISIBLE
+            binding.btRecord?.text = "Stop Record"
             toast("start record")
         }
-    }
-
-    private fun recordSuccess(path: String){
-
     }
 
     private fun screenShot(path: String){
@@ -152,6 +164,24 @@ class GuideDeviceActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
                 screenShot(path)
             }, 200)
         }
+    }
+
+    fun startPictureList(){
+        val intent = Intent()
+        intent.putExtra("FUN_DEVICE_ID", funDevice?.id)
+        intent.putExtra("FILE_TYPE", "jpg")
+        intent.setClass(this, GuideDeviceActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun startRecordList(){
+        val intent = Intent()
+        intent.putExtra("FUN_DEVICE_ID", funDevice?.id)
+        intent.putExtra("FILE_TYPE", "h264;mp4")
+        intent.setClass(this, DeviceVideoActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     override fun onPrepared(mp: MediaPlayer?) {

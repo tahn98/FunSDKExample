@@ -15,15 +15,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:visibility="invisible"
-            android:layout_marginRight="@dimen/dimen_size_10"
-            android:layout_marginTop="@dimen/dimen_size_10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/img_recording"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/recording" />
+            android:layout_marginTop="@dimen/dimen_size_10"
+            android:layout_marginRight="@dimen/dimen_size_10"
+            android:src="@drawable/recording"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btCapture"
@@ -38,6 +38,20 @@
             android:layout_height="wrap_content"
             android:text="Record"
             app:layout_constraintTop_toBottomOf="@id/btCapture" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btSwitchOrientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Switch Orientation"
+            app:layout_constraintTop_toBottomOf="@id/btRecord" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:text="List Video Record"
+            android:id="@+id/btVideoRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/btSwitchOrientation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

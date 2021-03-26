@@ -2,7 +2,6 @@ package com.example.funsdkexample.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.funsdkexample.databinding.LayoutDeviceItemBinding
 import com.lib.funsdk.support.models.FunDevStatus
@@ -23,6 +22,16 @@ class DeviceListAdapter : RecyclerView.Adapter<DeviceListAdapter.DeviceItemViewH
         holder.bind(deviceItemList[position])
     }
 
+    fun setDeviceItemList(deviceItemList: List<FunDevice>){
+        this.deviceItemList.clear()
+        this.deviceItemList.addAll(deviceItemList)
+        notifyDataSetChanged()
+    }
+
+    fun setOnDeviceItemClickListener(onItemClickListener: (arg: FunDevice) -> Unit){
+        this.onItemClickListener = onItemClickListener
+    }
+
     inner class DeviceItemViewHolder(private val layoutDeviceItemBinding: LayoutDeviceItemBinding) :
         RecyclerView.ViewHolder(layoutDeviceItemBinding.root) {
         fun bind(funDevice: FunDevice){
@@ -40,15 +49,5 @@ class DeviceListAdapter : RecyclerView.Adapter<DeviceListAdapter.DeviceItemViewH
                 onItemClickListener.invoke(funDevice)
             }
         }
-    }
-
-    fun setDeviceItemList(deviceItemList: List<FunDevice>){
-        this.deviceItemList.clear()
-        this.deviceItemList.addAll(deviceItemList)
-        notifyDataSetChanged()
-    }
-
-    fun setOnDeviceItemClickListener(onItemClickListener: (arg: FunDevice) -> Unit){
-        this.onItemClickListener = onItemClickListener
     }
 }
